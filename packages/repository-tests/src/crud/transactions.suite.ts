@@ -71,6 +71,15 @@ export function transactionSuite(
           tx = undefined;
         });
         afterEach(async () => {
+          // For postgresql connector, it doesn't wrap the connection with
+          // the Transaction that has juggler's Transaction mixin applied,
+          // therefore `commit` or `rollback` won't delete the connection's
+          // reference of a `tx`.
+          // Detailed explanation see:
+          // https://github.com/strongloop/loopback-next/pull/4474
+          if (ds.connector && ds.connector.name === 'postgresql') {
+            tx = undefined;
+          }
           if (tx?.isActive()) {
             await tx.rollback();
           }
