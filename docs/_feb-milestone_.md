@@ -3,6 +3,7 @@
 ### Overview
 
 - Continue focus on migration guide
+- Further investigation on the APIC/LB integration
 
 ### Goals
 
