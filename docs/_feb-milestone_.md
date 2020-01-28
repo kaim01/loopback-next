@@ -21,27 +21,31 @@
 - Create models & REST APIs dynamically at runtime
 
   [ ](8) How to build models, repositories and controllers dynamically at
-  runtime #4296 [needs estimate]
+  runtime #4296
 
 - Shopping app web site
 
   - [ ] (2) Shopping App Website: Installation/setup documentation
         https://github.com/strongloop/loopback4-example-shopping/issues/477
 
-- (3) Run shared tests from both v3 and v4 of juggler
-  https://github.com/strongloop/loopback-connector-db2/issues/133
-
-- (3) Add CrudRestApiBuilder to `@loopback/rest-crud` #3737
-
 - APIC Integration #4516
 
   - (needs estimate) [Spike] End to End test Shopping example in cloud with
     APIConnect #4498
 
+- Miscellaneous
+
+  - [ ] (3) Run shared tests from both v3 and v4 of juggler
+        https://github.com/strongloop/loopback-connector-db2/issues/133
+  - [ ] (3) Add CrudRestApiBuilder to `@loopback/rest-crud` #3737
+  - [ ] (8) Column names in lowercase using lb4 discover method - SQL connector
+        #3343
+
 - PR reviews:
   - [ ] feat: adds @deprecated convenience decorator #4415
   - [ ] feat: adds @tags convenience decorator #4416
   - [ ] feat: adds utility launch for debugging a single test file #4432
+  - [ ] Preserve custom type of auto-generated id property #4270
 
 ### Stretch Goals
 
