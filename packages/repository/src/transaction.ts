@@ -20,7 +20,7 @@ export interface Transaction {
   /**
    * Check if the transaction has an active connection
    */
-  isActive(): Promise<boolean>;
+  isActive(): boolean;
 
   /**
    * The transaction Identifier
