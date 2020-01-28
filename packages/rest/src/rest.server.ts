@@ -238,7 +238,7 @@ export class RestServer extends Context implements Server, HttpServerLike {
     // Mount our error handler
     this._expressApp.use(
       (err: Error, req: Request, res: Response, next: Function) => {
-        this._onUnhandledError(req, res, err);
+        this._onUnhandledError(req, res, err, next);
       },
     );
   }
@@ -884,18 +884,25 @@ export class RestServer extends Context implements Server, HttpServerLike {
     this._httpServer = undefined;
   }
 
-  protected _onUnhandledError(req: Request, res: Response, err: Error) {
+  protected _onUnhandledError(
+    req: Request,
+    res: Response,
+    err: Error,
+    next: Function,
+  ) {
     if (!res.headersSent) {
-      res.statusCode = 500;
-      res.end();
+      // The error can be thrown from cors middleware
+      // See https://github.com/strongloop/loopback-next/issues/4530
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      res.status((err as any).statusCode || 500).send({error: err});
+      return;
     }
 
-    // It's the responsibility of the Sequence to handle any errors.
-    // If an unhandled error escaped, then something very wrong happened
-    // and it's best to crash the process immediately.
-    process.nextTick(() => {
-      throw err;
-    });
+    // https://expressjs.com/en/guide/error-handling.html
+    // So when you add a custom error handler, you must delegate to the
+    // default Express error handler, when the headers have already been sent
+    // to the client:
+    next(err);
   }
 
   /**

@@ -22,6 +22,7 @@ import util from 'util';
 import {
   BodyParser,
   get,
+  HttpErrors,
   post,
   Request,
   requestBody,
@@ -164,20 +165,28 @@ describe('RestServer (integration)', () => {
     server.handler((context, sequence) => {
       return Promise.reject(new Error('unhandled test error'));
     });
-
-    // Temporarily disable Mocha's handling of uncaught exceptions
-    const mochaListeners = process.listeners('uncaughtException');
-    process.removeAllListeners('uncaughtException');
-    process.once('uncaughtException', err => {
-      expect(err).to.have.property('message', 'unhandled test error');
-      for (const l of mochaListeners) {
-        process.on('uncaughtException', l);
-      }
-    });
-
     return createClientForHandler(server.requestHandler)
       .get('/')
       .expect(500);
+  });
+
+  it('hangs up socket when Sequence fails with unhandled error and headers sent', async () => {
+    const server = await givenAServer({
+      rest: {
+        expressSettings: {
+          // Disable express logerror
+          env: 'test',
+        },
+      },
+    });
+    server.handler((context, sequence) => {
+      context.response.writeHead(200);
+      return Promise.reject(new Error('unhandled test error after sent'));
+    });
+
+    return expect(
+      createClientForHandler(server.requestHandler).get('/'),
+    ).to.be.rejectedWith(/socket hang up/);
   });
 
   it('allows static assets to be mounted at /', async () => {
@@ -367,6 +376,31 @@ describe('RestServer (integration)', () => {
       .options('/')
       .expect(200)
       .expect('Access-Control-Max-Age', '1');
+  });
+
+  it('allows CORS configuration with origin function to reject', async () => {
+    const server = await givenAServer({
+      rest: {
+        port: 0,
+        cors: {
+          origin: (origin, callback) => {
+            process.nextTick(() => {
+              callback(new HttpErrors.Forbidden('Not allowed by CORS'));
+            });
+          },
+        },
+      },
+    });
+
+    server.handler(dummyRequestHandler);
+
+    await createClientForHandler(server.requestHandler)
+      .options('/')
+      .expect(403, {
+        error: {
+          message: 'Not allowed by CORS',
+        },
+      });
   });
 
   it('exposes "GET /openapi.json" endpoint', async () => {
