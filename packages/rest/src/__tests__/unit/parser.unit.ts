@@ -346,6 +346,19 @@ describe('operationArgsParser', () => {
       );
     });
 
+    it('parses complex json object', async () => {
+      const req = givenRequest({
+        url: '/?filter={"include": [{"relation": "todoList"}]}',
+      });
+
+      const spec = givenOperationWithObjectParameter('filter');
+      const route = givenResolvedRoute(spec);
+
+      const args = await parseOperationArgs(req, route, requestBodyParser);
+
+      expect(args).to.eql([{include: [{relation: 'todoList'}]}]);
+    });
+
     it('parses url-encoded complex json object', async () => {
       const req = givenRequest({
         url: '/?filter=%7B"include"%3A%5B%7B"relation"%3A"todoList"%7D%5D%7D',

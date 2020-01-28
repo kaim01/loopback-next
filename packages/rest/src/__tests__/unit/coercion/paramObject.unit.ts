@@ -35,6 +35,12 @@ describe('coerce object param - required', function() {
     test(REQUIRED_ANY_OBJECT, {key: 'undefined'}, {key: 'undefined'});
     test(REQUIRED_ANY_OBJECT, {key: 'null'}, {key: 'null'});
     test(REQUIRED_ANY_OBJECT, {key: 'text'}, {key: 'text'});
+  });
+
+  context('valid string values', () => {
+    // simple object
+    test(REQUIRED_ANY_OBJECT, '{"key": "text"}', {key: 'text'});
+    // nested objects
     test(REQUIRED_ANY_OBJECT, '{"include": [{ "relation" : "todoList" }]}', {
       include: [{relation: 'todoList'}],
     });
@@ -93,6 +99,15 @@ describe('coerce object param - optional', function() {
     test(OPTIONAL_ANY_OBJECT, undefined, undefined);
     test(OPTIONAL_ANY_OBJECT, '', undefined);
     test(OPTIONAL_ANY_OBJECT, 'null', null);
+  });
+
+  context('valid string values', () => {
+    // simple object
+    test(OPTIONAL_ANY_OBJECT, '{"key": "text"}', {key: 'text'});
+    // nested objects
+    test(OPTIONAL_ANY_OBJECT, '{"include": [{ "relation" : "todoList" }]}', {
+      include: [{relation: 'todoList'}],
+    });
   });
 
   context('nested values are not coerced', () => {

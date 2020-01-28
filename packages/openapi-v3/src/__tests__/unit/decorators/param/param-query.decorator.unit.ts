@@ -221,7 +221,7 @@ describe('Routing metadata for parameters', () => {
   });
 
   describe('@param.query.object', () => {
-    it('sets in:query style:deepObject and a default schema', () => {
+    it('sets in:query and content["application/json"]', () => {
       class MyController {
         @get('/greet')
         greet(@param.query.object('filter') filter: object) {}

@@ -69,22 +69,30 @@ export class Validator {
     const schema: SchemaObject = this.ctx.parameterSpec.schema ?? {};
     const valueIsNull = value === 'null' || value === null;
 
-    // if parameter spec contains schema object, check if supplied value is NULL
-    if (spec.schema) {
+    if (this.isUrlEncodedJsonParam()) {
+      // is this an url encoded Json object query parameter?
+      // check for NULL values
+      if (valueIsNull) return true;
+    } else if (spec.schema) {
+      // if parameter spec contains schema object, check if supplied value is NULL
       if (schema.type === 'object' && valueIsNull) return true;
-    } else {
-      // for url encoded Json object query parameters, schema is defined under content['application/json']
-      if (
-        spec.in === 'query' &&
-        spec.content &&
-        spec.content['application/json'] &&
-        spec.content['application/json'].schema
-      ) {
-        // check for NULL values in url encoded Json objects
-        if (valueIsNull) return true;
-      }
     }
 
+    return false;
+  }
+
+  /**
+   * Return `true` if defined specification is for a url encoded Json object query parameter
+   *
+   * for url encoded Json object query parameters,
+   * schema is defined under content['application/json']
+   */
+  isUrlEncodedJsonParam() {
+    const spec: ParameterObject = this.ctx.parameterSpec;
+
+    if (spec.in === 'query' && spec.content?.['application/json']?.schema) {
+      return true;
+    }
     return false;
   }
 }
