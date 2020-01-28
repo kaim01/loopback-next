@@ -9,10 +9,11 @@
 
 - Migration guide between LB3 and LB4 MVP #453
 
-  - [ ] (3) How to map LB3 CLI commands to LB4 CLI #3953
   - [ ] (3) How to migrate CRUD Operation Hooks #3952
   - [ ] (8) How to migrate model mixins #3951
   - [ ] (3) Spike: how to import LB3 models extending a custom base model #3813
+  - [ ] (8) Migration Guide: Discuss life cycle differences between LB3 and LB4
+        #3935
 
 - Tooling around migration
 
@@ -31,8 +32,8 @@
 
 - APIC Integration #4516
 
-  - (needs estimate) [Spike] End to End test Shopping example in cloud with
-    APIConnect #4498
+  - [ ] (5) [Spike] End to End test Shopping example in cloud with APIConnect
+        #4498
 
 - Miscellaneous
 
@@ -64,12 +65,8 @@
   - [ ] Log extension is not printing any logs #2173
 
 - Migration guide between LB3 and LB4 MVP #453
-
+  - [ ] (3) How to map LB3 CLI commands to LB4 CLI #3953
   - [ ] Which official LB3 components are not planned in LB4 #3956
-
-- Developer Experience
-
-  - [ ] Sugar decorators for Filter and Where parameters #1749
 
 ### "Help wanted" and "Good first issue"
 
